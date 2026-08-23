@@ -1,0 +1,31 @@
+DROP TABLE IF EXISTS usuario;
+DROP TABLE IF EXISTS rol;
+DROP TABLE IF EXISTS almacenamiento;
+
+CREATE TABLE rol (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE,
+    descripcion VARCHAR(255),
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
+    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE usuario (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    nombre VARCHAR(100),
+    apellido VARCHAR(100),
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
+    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    rol_id BIGINT NOT NULL,
+    CONSTRAINT fk_usuario_rol FOREIGN KEY (rol_id) REFERENCES rol(id)
+);
+
+CREATE TABLE almacenamiento (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    objeto_almacenado VARCHAR(150) NOT NULL,
+    fecha_ingreso TIMESTAMP NOT NULL,
+    fecha_salida TIMESTAMP
+);
