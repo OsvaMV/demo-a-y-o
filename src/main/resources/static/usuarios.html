@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Usuarios - Proyecto A-O</title>
+	<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+	<header>
+		<h1>Proyecto A-O</h1>
+		<nav id="nav"></nav>
+		<div class="user-bar">
+			<span id="user-info"></span>
+			<button onclick="cerrarSesion()">Cerrar sesion</button>
+		</div>
+	</header>
+
+	<main>
+		<h2>Usuarios</h2>
+		<div id="mensaje" class="mensaje"></div>
+
+		<section class="tarjeta">
+			<h3 id="form-titulo">Nuevo usuario</h3>
+			<form id="usuario-form">
+				<input type="hidden" id="usuario-id">
+				<div class="fila-form">
+					<label>Username
+						<input type="text" id="usuario-username" required maxlength="50">
+					</label>
+					<label>Email
+						<input type="email" id="usuario-email" required maxlength="150">
+					</label>
+				</div>
+				<div class="fila-form">
+					<label>Nombre
+						<input type="text" id="usuario-nombre" maxlength="100">
+					</label>
+					<label>Apellido
+						<input type="text" id="usuario-apellido" maxlength="100">
+					</label>
+				</div>
+				<div class="fila-form">
+					<label>Contrasena
+						<input type="password" id="usuario-password" required maxlength="255">
+					</label>
+					<div id="rol-selector-contenedor"></div>
+				</div>
+				<p class="ayuda" id="ayuda-password">La contrasena se vuelve a pedir tambien al editar.</p>
+				<label class="checkbox">
+					<input type="checkbox" id="usuario-activo" checked> Activo
+				</label>
+				<div class="acciones">
+					<button type="submit">Guardar</button>
+					<button type="button" class="secundario" id="btn-cancelar" style="display:none">Cancelar edicion</button>
+				</div>
+			</form>
+		</section>
+
+		<section class="tarjeta">
+			<h3>Buscar por username (coincidencia parcial)</h3>
+			<form id="buscar-form">
+				<div class="fila-form">
+					<label>Username
+						<input type="text" id="buscar-username">
+					</label>
+				</div>
+				<div class="acciones">
+					<button type="submit">Buscar</button>
+					<button type="button" class="secundario" id="btn-ver-todos">Ver todos</button>
+				</div>
+			</form>
+		</section>
+
+		<table id="tabla-usuarios">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Username</th>
+					<th>Email</th>
+					<th>Nombre</th>
+					<th>Rol</th>
+					<th>Activo</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</main>
+
+	<script src="/js/api.js"></script>
+	<script src="/js/nav.js"></script>
+	<script src="/js/usuarios.js"></script>
+</body>
+</html>

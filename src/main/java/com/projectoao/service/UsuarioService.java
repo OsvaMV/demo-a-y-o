@@ -42,11 +42,12 @@ public interface UsuarioService {
 	Flux<UsuarioDto> buscarTodos();
 
 	/**
-	 * Busca un usuario por su username.
+	 * Busca usuarios cuyo username contenga el texto dado (coincidencia parcial, sin
+	 * distinguir mayusculas).
 	 *
-	 * @param username username exacto del usuario
-	 * @return el usuario encontrado
+	 * @param username texto a buscar dentro del username
+	 * @return el flujo de usuarios que coinciden
 	 */
-	Mono<UsuarioDto> buscarPorUsername(String username);
+	Flux<UsuarioDto> buscarPorUsername(String username);
 
 }

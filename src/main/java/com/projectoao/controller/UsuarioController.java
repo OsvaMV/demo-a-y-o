@@ -55,12 +55,13 @@ public interface UsuarioController {
 	Flux<UsuarioDto> buscarTodos();
 
 	/**
-	 * Busca un usuario por su username.
+	 * Busca usuarios cuyo username contenga el texto dado (coincidencia parcial, sin
+	 * distinguir mayusculas).
 	 *
-	 * @param username username exacto del usuario
-	 * @return el usuario encontrado
+	 * @param username texto a buscar dentro del username
+	 * @return el flujo de usuarios que coinciden
 	 */
 	@GetMapping("/usuarios/username/{username}")
-	Mono<ResponseEntity<UsuarioDto>> buscarPorUsername(@PathVariable String username);
+	Flux<UsuarioDto> buscarPorUsername(@PathVariable String username);
 
 }

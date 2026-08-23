@@ -42,11 +42,12 @@ public interface RolService {
 	Flux<RolDto> buscarTodos();
 
 	/**
-	 * Busca un rol por su nombre.
+	 * Busca roles cuyo nombre contenga el texto dado (coincidencia parcial, sin
+	 * distinguir mayusculas).
 	 *
-	 * @param nombre nombre exacto del rol
-	 * @return el rol encontrado
+	 * @param nombre texto a buscar dentro del nombre del rol
+	 * @return el flujo de roles que coinciden
 	 */
-	Mono<RolDto> buscarPorNombre(String nombre);
+	Flux<RolDto> buscarPorNombre(String nombre);
 
 }

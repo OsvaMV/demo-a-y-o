@@ -2,6 +2,7 @@ package com.projectoao.almacenamiento;
 
 import com.projectoao.dto.AlmacenamientoDto;
 import com.projectoao.dto.AlmacenamientoRequestDto;
+import com.projectoao.support.AutenticacionTestHelper;
 import com.projectoao.support.CredencialesAdmin;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,13 +27,12 @@ class AlmacenamientoCrudIntegrationTest {
 	private int port;
 
 	private WebTestClient client() {
-		return WebTestClient.bindToServer()
+		WebTestClient sinAutenticar = WebTestClient.bindToServer()
 				.baseUrl("http://localhost:" + port)
 				.responseTimeout(Duration.ofSeconds(10))
-				.build()
-				.mutate()
-				.defaultHeaders(headers -> headers.setBasicAuth(CredencialesAdmin.USERNAME, CredencialesAdmin.PASSWORD))
 				.build();
+		return AutenticacionTestHelper.clienteAutenticado(sinAutenticar, CredencialesAdmin.USERNAME,
+				CredencialesAdmin.PASSWORD);
 	}
 
 	@Test
@@ -95,12 +95,21 @@ class AlmacenamientoCrudIntegrationTest {
 				.jsonPath("$.fechaSalida").isNotEmpty();
 
 		client.get().uri(uriBuilder -> uriBuilder.path("/almacenamientos")
-						.queryParam("fechaSalida", fechaSalida.toString())
+						.queryParam("fechaSalidaDesde", fechaSalida.minusDays(1).toString())
+						.queryParam("fechaSalidaHasta", fechaSalida.plusDays(1).toString())
 						.build())
 				.exchange()
 				.expectStatus().isOk()
 				.expectBodyList(AlmacenamientoDto.class)
 				.value(lista -> assertThat(lista).extracting(AlmacenamientoDto::getId).contains(creado.getId()));
+
+		client.get().uri(uriBuilder -> uriBuilder.path("/almacenamientos")
+						.queryParam("fechaSalidaDesde", fechaSalida.plusDays(2).toString())
+						.build())
+				.exchange()
+				.expectStatus().isOk()
+				.expectBodyList(AlmacenamientoDto.class)
+				.value(lista -> assertThat(lista).extracting(AlmacenamientoDto::getId).doesNotContain(creado.getId()));
 
 		client.delete().uri("/almacenamientos/{id}", creado.getId())
 				.exchange()

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Iniciar sesion - Proyecto A-O</title>
+	<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="pantalla-login">
+	<div class="login-tarjeta">
+		<h1>Proyecto A-O</h1>
+		<div id="mensaje" class="mensaje"></div>
+		<form id="login-form">
+			<label>Usuario
+				<input type="text" id="username" autocomplete="username" required>
+			</label>
+			<label>Contrasena
+				<input type="password" id="password" autocomplete="current-password" required>
+			</label>
+			<button type="submit">Iniciar sesion</button>
+		</form>
+	</div>
+
+	<script>
+		if (localStorage.getItem('token')) {
+			window.location.replace('/dashboard.html');
+		}
+
+		document.getElementById('login-form').addEventListener('submit', async (evento) => {
+			evento.preventDefault();
+			const mensaje = document.getElementById('mensaje');
+			mensaje.textContent = '';
+			mensaje.className = 'mensaje';
+
+			const username = document.getElementById('username').value;
+			const password = document.getElementById('password').value;
+
+			try {
+				const respuesta = await fetch('/auth/login', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ username, password })
+				});
+
+				if (!respuesta.ok) {
+					mensaje.textContent = respuesta.status === 401
+						? 'Usuario o contrasena invalidos'
+						: 'Error ' + respuesta.status + ' al iniciar sesion';
+					mensaje.className = 'mensaje error';
+					return;
+				}
+
+				const datos = await respuesta.json();
+				localStorage.setItem('token', datos.token);
+				localStorage.setItem('username', datos.username);
+				localStorage.setItem('rol', datos.rol);
+				window.location.href = '/dashboard.html';
+			} catch (error) {
+				mensaje.textContent = 'No se pudo conectar con el servidor';
+				mensaje.className = 'mensaje error';
+			}
+		});
+	</script>
+</body>
+</html>

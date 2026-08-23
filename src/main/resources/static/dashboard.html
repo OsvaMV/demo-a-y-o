@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Inicio - Proyecto A-O</title>
+	<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+	<header>
+		<h1>Proyecto A-O</h1>
+		<nav id="nav"></nav>
+		<div class="user-bar">
+			<span id="user-info"></span>
+			<button onclick="cerrarSesion()">Cerrar sesion</button>
+		</div>
+	</header>
+
+	<main>
+		<h2>Bienvenido</h2>
+		<p id="bienvenida"></p>
+
+		<div class="menu-tarjetas" id="menu-tarjetas"></div>
+	</main>
+
+	<script src="/js/api.js"></script>
+	<script src="/js/nav.js"></script>
+	<script>
+		exigirSesion();
+		pintarNav('/dashboard.html');
+		document.getElementById('bienvenida').textContent =
+			'Sesion iniciada como ' + obtenerUsername() + ', rol ' + obtenerRol() + '.';
+
+		const tarjetas = [
+			{
+				href: '/roles.html', titulo: 'Roles', roles: ['ADMINISTRADOR', 'GERENTE'],
+				descripcion: 'Crear, editar, eliminar y buscar roles.'
+			},
+			{
+				href: '/usuarios.html', titulo: 'Usuarios', roles: ['ADMINISTRADOR', 'GERENTE'],
+				descripcion: 'Administrar los usuarios del sistema.'
+			},
+			{
+				href: '/almacenamiento.html', titulo: 'Almacenamiento', roles: ['ADMINISTRADOR', 'GERENTE', 'TECNICO'],
+				descripcion: 'Registrar y consultar objetos almacenados.'
+			}
+		];
+
+		const rol = obtenerRol();
+		document.getElementById('menu-tarjetas').innerHTML = tarjetas
+			.filter(t => t.roles.includes(rol))
+			.map(t => `
+				<a class="menu-tarjeta" href="${t.href}">
+					<h3>${t.titulo}</h3>
+					<p>${t.descripcion}</p>
+				</a>
+			`).join('');
+	</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Roles - Proyecto A-O</title>
+	<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+	<header>
+		<h1>Proyecto A-O</h1>
+		<nav id="nav"></nav>
+		<div class="user-bar">
+			<span id="user-info"></span>
+			<button onclick="cerrarSesion()">Cerrar sesion</button>
+		</div>
+	</header>
+
+	<main>
+		<h2>Roles</h2>
+		<div id="mensaje" class="mensaje"></div>
+
+		<section class="tarjeta" id="tarjeta-form-rol">
+			<h3 id="form-titulo">Nuevo rol</h3>
+			<form id="rol-form">
+				<input type="hidden" id="rol-id">
+				<div class="fila-form">
+					<label>Nombre
+						<input type="text" id="rol-nombre" required maxlength="50">
+					</label>
+					<label>Descripcion
+						<input type="text" id="rol-descripcion" maxlength="255">
+					</label>
+				</div>
+				<label class="checkbox">
+					<input type="checkbox" id="rol-activo" checked> Activo
+				</label>
+				<div class="acciones">
+					<button type="submit">Guardar</button>
+					<button type="button" class="secundario" id="btn-cancelar" style="display:none">Cancelar edicion</button>
+				</div>
+			</form>
+		</section>
+
+		<section class="tarjeta">
+			<h3>Buscar por nombre (coincidencia parcial)</h3>
+			<form id="buscar-form">
+				<div class="fila-form">
+					<label>Nombre
+						<input type="text" id="buscar-nombre">
+					</label>
+				</div>
+				<div class="acciones">
+					<button type="submit">Buscar</button>
+					<button type="button" class="secundario" id="btn-ver-todos">Ver todos</button>
+				</div>
+			</form>
+		</section>
+
+		<table id="tabla-roles">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Nombre</th>
+					<th>Descripcion</th>
+					<th>Activo</th>
+					<th>Creado</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</main>
+
+	<script src="/js/api.js"></script>
+	<script src="/js/nav.js"></script>
+	<script src="/js/roles.js"></script>
+</body>
+</html>

@@ -6,6 +6,7 @@ import com.projectoao.dto.RolDto;
 import com.projectoao.dto.RolRequestDto;
 import com.projectoao.dto.UsuarioDto;
 import com.projectoao.dto.UsuarioRequestDto;
+import com.projectoao.support.AutenticacionTestHelper;
 import com.projectoao.support.CredencialesAdmin;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Verifica la matriz de permisos por rol: ADMINISTRADOR (acceso total), GERENTE
- * (sin roles; usuarios solo crear/consultar; almacenamiento total) y TECNICO
+ * (roles solo consultar; usuarios solo crear/consultar; almacenamiento total) y TECNICO
  * (sin roles ni usuarios; almacenamiento solo consultar/agregar).
  */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -38,9 +39,7 @@ class AuthorizationTest {
 	}
 
 	private WebTestClient clienteAutenticado(String username, String password) {
-		return rawClient().mutate()
-				.defaultHeaders(headers -> headers.setBasicAuth(username, password))
-				.build();
+		return AutenticacionTestHelper.clienteAutenticado(rawClient(), username, password);
 	}
 
 	private WebTestClient clienteAdmin() {
@@ -85,17 +84,28 @@ class AuthorizationTest {
 	}
 
 	@Test
-	void gerentePuedeCrearYConsultarUsuariosPeroNoActualizarNiEliminarNiTocarRoles_yTieneAccesoTotalAAlmacenamiento() {
+	void gerentePuedeConsultarRolesYCrearConsultarUsuariosPeroNoActualizarNiEliminarUsuariosNiTocarRolesMasAlla_yTieneAccesoTotalAAlmacenamiento() {
 		Long rolGerenteId = crearRol("gerente");
 		crearUsuario("gerente_auth", "Gerente123!", rolGerenteId);
 		WebTestClient gerente = clienteAutenticado("gerente_auth", "Gerente123!");
 
 		gerente.get().uri("/roles")
 				.exchange()
-				.expectStatus().isForbidden();
+				.expectStatus().isOk();
+		gerente.get().uri("/roles/nombre/gerente")
+				.exchange()
+				.expectStatus().isOk();
 		gerente.post().uri("/roles")
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(new RolRequestDto())
+				.exchange()
+				.expectStatus().isForbidden();
+		gerente.put().uri("/roles/{id}", rolGerenteId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new RolRequestDto())
+				.exchange()
+				.expectStatus().isForbidden();
+		gerente.delete().uri("/roles/{id}", rolGerenteId)
 				.exchange()
 				.expectStatus().isForbidden();
 

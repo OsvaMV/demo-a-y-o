@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Almacenamiento - Proyecto A-O</title>
+	<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+	<header>
+		<h1>Proyecto A-O</h1>
+		<nav id="nav"></nav>
+		<div class="user-bar">
+			<span id="user-info"></span>
+			<button onclick="cerrarSesion()">Cerrar sesion</button>
+		</div>
+	</header>
+
+	<main>
+		<h2>Almacenamiento</h2>
+		<div id="mensaje" class="mensaje"></div>
+
+		<section class="tarjeta">
+			<h3 id="form-titulo">Nuevo registro</h3>
+			<form id="almacenamiento-form">
+				<input type="hidden" id="almacenamiento-id">
+				<label>Objeto almacenado
+					<input type="text" id="almacenamiento-objeto" required maxlength="150">
+				</label>
+				<div class="fila-form">
+					<label>Fecha de ingreso
+						<input type="datetime-local" id="almacenamiento-ingreso" required>
+					</label>
+					<label>Fecha de salida (opcional)
+						<input type="datetime-local" id="almacenamiento-salida">
+					</label>
+				</div>
+				<div class="acciones">
+					<button type="submit">Guardar</button>
+					<button type="button" class="secundario" id="btn-cancelar" style="display:none">Cancelar edicion</button>
+				</div>
+			</form>
+		</section>
+
+		<section class="tarjeta">
+			<h3>Buscar</h3>
+			<form id="buscar-form">
+				<label>Objeto almacenado (coincidencia parcial)
+					<input type="text" id="buscar-objeto">
+				</label>
+				<div class="fila-form">
+					<label>Ingreso desde
+						<input type="datetime-local" id="buscar-ingreso-desde">
+					</label>
+					<label>Ingreso hasta
+						<input type="datetime-local" id="buscar-ingreso-hasta">
+					</label>
+				</div>
+				<div class="fila-form">
+					<label>Salida desde
+						<input type="datetime-local" id="buscar-salida-desde">
+					</label>
+					<label>Salida hasta
+						<input type="datetime-local" id="buscar-salida-hasta">
+					</label>
+				</div>
+				<div class="acciones">
+					<button type="submit">Buscar</button>
+					<button type="button" class="secundario" id="btn-ver-todos">Ver todos</button>
+				</div>
+			</form>
+		</section>
+
+		<table id="tabla-almacenamiento">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Objeto almacenado</th>
+					<th>Ingreso</th>
+					<th>Salida</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</main>
+
+	<script src="/js/api.js"></script>
+	<script src="/js/nav.js"></script>
+	<script src="/js/almacenamiento.js"></script>
+</body>
+</html>

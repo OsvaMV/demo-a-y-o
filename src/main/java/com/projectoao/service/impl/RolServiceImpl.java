@@ -69,11 +69,11 @@ public class RolServiceImpl implements RolService {
 
 	/** {@inheritDoc} */
 	@Override
-	public Mono<RolDto> buscarPorNombre(String nombre) {
-		return Mono.fromCallable(() -> rolRepository.findByNombre(nombre)
-						.map(rolMapper::toDto)
-						.orElseThrow(() -> new RecursoNoEncontradoException("Rol no encontrado con nombre " + nombre)))
-				.subscribeOn(Schedulers.boundedElastic());
+	public Flux<RolDto> buscarPorNombre(String nombre) {
+		return Mono.fromCallable(() -> rolRepository.findByNombreContainingIgnoreCase(nombre))
+				.subscribeOn(Schedulers.boundedElastic())
+				.flatMapMany(Flux::fromIterable)
+				.map(rolMapper::toDto);
 	}
 
 }

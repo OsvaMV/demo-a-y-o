@@ -83,11 +83,17 @@ public class AlmacenamientoServiceImpl implements AlmacenamientoService {
 				predicados.add(cb.like(cb.lower(root.get("objetoAlmacenado")),
 						"%" + filtro.getObjetoAlmacenado().toLowerCase() + "%"));
 			}
-			if (filtro.getFechaIngreso() != null) {
-				predicados.add(cb.equal(root.get("fechaIngreso"), filtro.getFechaIngreso()));
+			if (filtro.getFechaIngresoDesde() != null) {
+				predicados.add(cb.greaterThanOrEqualTo(root.get("fechaIngreso"), filtro.getFechaIngresoDesde()));
 			}
-			if (filtro.getFechaSalida() != null) {
-				predicados.add(cb.equal(root.get("fechaSalida"), filtro.getFechaSalida()));
+			if (filtro.getFechaIngresoHasta() != null) {
+				predicados.add(cb.lessThanOrEqualTo(root.get("fechaIngreso"), filtro.getFechaIngresoHasta()));
+			}
+			if (filtro.getFechaSalidaDesde() != null) {
+				predicados.add(cb.greaterThanOrEqualTo(root.get("fechaSalida"), filtro.getFechaSalidaDesde()));
+			}
+			if (filtro.getFechaSalidaHasta() != null) {
+				predicados.add(cb.lessThanOrEqualTo(root.get("fechaSalida"), filtro.getFechaSalidaHasta()));
 			}
 
 			return cb.and(predicados.toArray(new Predicate[0]));

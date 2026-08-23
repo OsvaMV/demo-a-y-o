@@ -49,9 +49,8 @@ public class UsuarioControllerImpl implements UsuarioController {
 
 	/** {@inheritDoc} */
 	@Override
-	public Mono<ResponseEntity<UsuarioDto>> buscarPorUsername(String username) {
-		return usuarioService.buscarPorUsername(username)
-				.map(ResponseEntity::ok);
+	public Flux<UsuarioDto> buscarPorUsername(String username) {
+		return usuarioService.buscarPorUsername(username);
 	}
 
 }

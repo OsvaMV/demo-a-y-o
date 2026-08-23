@@ -80,11 +80,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	/** {@inheritDoc} */
 	@Override
-	public Mono<UsuarioDto> buscarPorUsername(String username) {
-		return Mono.fromCallable(() -> usuarioRepository.findByUsername(username)
-						.map(usuarioMapper::toDto)
-						.orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado con username " + username)))
-				.subscribeOn(Schedulers.boundedElastic());
+	public Flux<UsuarioDto> buscarPorUsername(String username) {
+		return Mono.fromCallable(() -> usuarioRepository.findByUsernameContainingIgnoreCase(username))
+				.subscribeOn(Schedulers.boundedElastic())
+				.flatMapMany(Flux::fromIterable)
+				.map(usuarioMapper::toDto);
 	}
 
 	private Rol buscarRolOFallar(Long rolId) {

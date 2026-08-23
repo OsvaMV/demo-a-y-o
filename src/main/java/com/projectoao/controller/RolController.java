@@ -55,12 +55,13 @@ public interface RolController {
 	Flux<RolDto> buscarTodos();
 
 	/**
-	 * Busca un rol por su nombre.
+	 * Busca roles cuyo nombre contenga el texto dado (coincidencia parcial, sin
+	 * distinguir mayusculas).
 	 *
-	 * @param nombre nombre exacto del rol
-	 * @return el rol encontrado
+	 * @param nombre texto a buscar dentro del nombre del rol
+	 * @return el flujo de roles que coinciden
 	 */
 	@GetMapping("/roles/nombre/{nombre}")
-	Mono<ResponseEntity<RolDto>> buscarPorNombre(@PathVariable String nombre);
+	Flux<RolDto> buscarPorNombre(@PathVariable String nombre);
 
 }

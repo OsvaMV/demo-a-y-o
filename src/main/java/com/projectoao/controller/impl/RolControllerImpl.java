@@ -49,9 +49,8 @@ public class RolControllerImpl implements RolController {
 
 	/** {@inheritDoc} */
 	@Override
-	public Mono<ResponseEntity<RolDto>> buscarPorNombre(String nombre) {
-		return rolService.buscarPorNombre(nombre)
-				.map(ResponseEntity::ok);
+	public Flux<RolDto> buscarPorNombre(String nombre) {
+		return rolService.buscarPorNombre(nombre);
 	}
 
 }

@@ -4,6 +4,7 @@ import com.projectoao.dto.RolDto;
 import com.projectoao.dto.RolRequestDto;
 import com.projectoao.dto.UsuarioDto;
 import com.projectoao.dto.UsuarioRequestDto;
+import com.projectoao.support.AutenticacionTestHelper;
 import com.projectoao.support.CredencialesAdmin;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,13 +27,12 @@ class UsuarioCrudIntegrationTest {
 	private int port;
 
 	private WebTestClient client() {
-		return WebTestClient.bindToServer()
+		WebTestClient sinAutenticar = WebTestClient.bindToServer()
 				.baseUrl("http://localhost:" + port)
 				.responseTimeout(Duration.ofSeconds(10))
-				.build()
-				.mutate()
-				.defaultHeaders(headers -> headers.setBasicAuth(CredencialesAdmin.USERNAME, CredencialesAdmin.PASSWORD))
 				.build();
+		return AutenticacionTestHelper.clienteAutenticado(sinAutenticar, CredencialesAdmin.USERNAME,
+				CredencialesAdmin.PASSWORD);
 	}
 
 	@Test
@@ -76,12 +76,11 @@ class UsuarioCrudIntegrationTest {
 		assertThat(creado.getRol()).isNotNull();
 		assertThat(creado.getRol().getId()).isEqualTo(rol.getId());
 
-		client.get().uri("/usuarios/username/jperez")
+		client.get().uri("/usuarios/username/jper")
 				.exchange()
 				.expectStatus().isOk()
-				.expectBody()
-				.jsonPath("$.id").isEqualTo(creado.getId().intValue())
-				.jsonPath("$.rol.nombre").isEqualTo("USER_TEST");
+				.expectBodyList(UsuarioDto.class)
+				.value(lista -> assertThat(lista).extracting(UsuarioDto::getId).contains(creado.getId()));
 
 		UsuarioRequestDto actualizacion = new UsuarioRequestDto();
 		actualizacion.setUsername("jperez");
@@ -114,7 +113,9 @@ class UsuarioCrudIntegrationTest {
 
 		client.get().uri("/usuarios/username/jperez")
 				.exchange()
-				.expectStatus().isNotFound();
+				.expectStatus().isOk()
+				.expectBodyList(UsuarioDto.class)
+				.value(lista -> assertThat(lista).extracting(UsuarioDto::getId).doesNotContain(creado.getId()));
 	}
 
 }

@@ -52,6 +52,8 @@ public interface AlmacenamientoController {
 	/**
 	 * Busca registros de almacenamiento por cualquier combinacion de sus atributos (excepto el
 	 * id), recibidos como parametros de consulta opcionales. Sin parametros, devuelve todos.
+	 * El objeto almacenado se busca por coincidencia parcial; las fechas se filtran por rango
+	 * (desde/hasta), no por coincidencia exacta.
 	 *
 	 * @param filtro criterios de busqueda, todos opcionales
 	 * @return el flujo de registros que cumplen los filtros informados
